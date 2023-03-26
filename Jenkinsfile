@@ -36,7 +36,7 @@ pipeline {
                 script {
                     try {
                         sh 'docker rmi $DOCKER_USER/$JOB_NAME:latest'
-                        sh 'docker volume rm $JOB_NAME_node_modules'
+                        sh "docker volume rm ${JOB_NAME}_node_modules"
                     } catch(Exception e) {
                         print("Error: " + e)
                     }
