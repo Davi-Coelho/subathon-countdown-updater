@@ -6,8 +6,6 @@ services:
     image: docker_user/project_name
     build:
       context: PROJECT_NAME
-    env_file:
-      - .env
     labels:
       - traefik.http.routers.PROJECT_NAME.rule=Host(`PROJECT_NAME.DOMAIN`)
       - traefik.http.routers.PROJECT_NAME.tls=true
