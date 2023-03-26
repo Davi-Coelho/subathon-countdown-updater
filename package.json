@@ -1,0 +1,27 @@
+{
+  "name": "subathon-countdown-updater",
+  "version": "1.0.0",
+  "description": "Servidor para atualização do programa de Subathon",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Davi-Coelho/subathon-countdown-updater.git"
+  },
+  "keywords": [
+    "Subathon",
+    "Updater",
+    "Twitch"
+  ],
+  "author": "Davi Coelho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Davi-Coelho/subathon-countdown-updater/issues"
+  },
+  "homepage": "https://github.com/Davi-Coelho/subathon-countdown-updater#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
