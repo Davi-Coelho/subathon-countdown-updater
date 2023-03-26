@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  project:
+    container_name: PROJECT_NAME
+    restart: unless-stopped
+    image: docker_user/project_name
+    build:
+      context: PROJECT_NAME
+    env_file:
+      - .env
+    labels:
+      - traefik.http.routers.PROJECT_NAME.rule=Host(`PROJECT_NAME.DOMAIN`)
+      - traefik.http.routers.PROJECT_NAME.tls=true
+      - traefik.http.routers.PROJECT_NAME.tls.certresolver=lets-encrypt
+      - traefik.port=PROJECT_PORT
+    volumes:
+      - ./PROJECT_NAME:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    networks:
+      - web
+    command: /home/node/app/node_modules/.bin/nodemon app.js
+
+volumes:
+  node_modules:
+
+networks:
+  web:
+    external: true
