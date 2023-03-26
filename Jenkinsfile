@@ -11,6 +11,42 @@ pipeline {
                 echo 'Building $JOB_NAME...'
             }
         }
+
+        stage("Updating resource file") {
+            steps {
+                withFileParameter(name:'UPDATE_RES', allowNoFile: true) {
+                    sh 'cp $UPDATE_RES update_res.neu'
+                    script {
+                        FILE_SIZE = sh (
+                            script: 'wc -c update_res.neu | awk \'{print $1}\'',
+                            returnStdout: true
+                        ).trim()
+                        if (FILE_SIZE != '0') {
+                            withCredentials([usernamePassword(credentialsId: 'git', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                                dir("update_file") {
+                                    git branch: "main", url: '$PROJECT_GIT'
+                                    sh 'mv ../update_res.neu ./app/public/update_res.neu'
+                                    CURRENT_VERSION = sh (
+                                        script: 'sed -n \'3p\' ./app/public/update_manifest.json',
+                                        returnStdout: true
+                                    ).trim()
+                                    sh "sed -i 's/${CURRENT_VERSION}/\"version\": \"${NEW_VERSION}\",/' ./app/public/update_manifest.json"
+                                    sh "git add ."
+                                    sh "git commit -m 'att: ${NEW_VERSION} nova versão do subathon;'"
+                                    sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Davi-Coelho/subathon-countdown-updater'
+                                }
+                            }
+                            sh 'rm -rf update_file/'
+                            sh 'rm -rf update_file@tmp/'
+                        } else {
+                            sh 'rm update_res.neu'
+                            echo 'Sem nova versão!'
+                        }
+                    }
+                }
+            }
+        }
+
         stage("Cloning git") {
             steps {
                 dir("${JOB_NAME}") {
